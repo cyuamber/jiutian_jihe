@@ -1,0 +1,111 @@
+{
+  "code": 200,
+  "message": "OK",
+  "body": [
+    {
+      "id": 1,
+      "name": "FW-SPEC",
+      "version": "V1.0",
+      "sutType": 1,
+      "subSutType": 101,
+      "publishOrg": "CMCC",
+      "publishTime": 1573516800000,
+      "sutTypeCH": {
+        "code": 1,
+        "dictLabel": "FW",
+        "dictValue": "1",
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      },
+      "subSutTypeCH": {
+        "code": "101",
+        "dictLabel": "MME",
+        "dictValue": "1",
+        "dictParentCode": null,
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      },
+      "caseId":[4]
+    },{
+      "id": 2,
+      "name": "MME-SPEC",
+      "version": "V1.0",
+      "sutType": 2,
+      "subSutType": 102,
+      "publishOrg": "CMCC",
+      "publishTime": 1569945600000,
+      "sutTypeCH": {
+        "code": "2",
+        "dictLabel": "MME",
+        "dictValue": "1",
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      },
+      "subSutTypeCH": {
+        "code": "102",
+        "dictLabel": "MME",
+        "dictValue": "1",
+        "dictParentCode": null,
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      }
+    },{
+      "id": 3,
+      "name": "PCRF-SPEC",
+      "version": "V1.0",
+      "sutType": 3,
+      "subSutType": 103,
+      "publishOrg": "CMCC",
+      "publishTime": 1564675200000,
+      "sutTypeCH": {
+        "code": "3",
+        "dictLabel": "PCRF",
+        "dictValue": "1",
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      },
+      "subSutTypeCH": {
+        "code": "103",
+        "dictLabel": "SPGW",
+        "dictValue": "1",
+        "dictParentCode": null,
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      }
+    },{
+      "id": 4,
+      "name": "FW-SPEC",
+      "version": "V1.0",
+      "sutType": 101001,
+      "subSutType": 4,
+      "publishOrg": "CMCC",
+      "publishTime": 1570752000000,
+      "sutTypeCH": {
+        "code": "101001",
+        "dictLabel": "FW",
+        "dictValue": "1",
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      },
+      "subSutTypeCH": {
+        "code": "4",
+        "dictLabel": "FW",
+        "dictValue": "1",
+        "dictParentCode": null,
+        "status": "\u0000",
+        "remark": null,
+        "lang": null
+      },
+      "caseId":[7]
+    }
+  ],
+  "total": 1,
+  "pageTotal": 1
+}
