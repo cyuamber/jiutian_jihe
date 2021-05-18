@@ -1,8 +1,5 @@
 <template>
   <div class="layout-siderbar">
-    <div class="layout-siderbar__logo">
-      <img src="@/assets/logo.png" />
-    </div>
     <a-menu
       theme="dark"
       mode="inline"
@@ -85,13 +82,5 @@ export default {
 </script>
 <style lang="less" scoped>
 .layout-siderbar {
-  .layout-siderbar__logo {
-    height: 32px;
-    margin: 16px;
-    text-align: center;
-    img {
-      height: 120%;
-    }
-  }
 }
 </style>

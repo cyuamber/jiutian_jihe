@@ -1,7 +1,21 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
+      <div class="logo">
+        <img v-if="!collapsed" src="@/assets/logo.png" />
+        <img v-else-if="collapsed" src="@/assets/cmcc.png" />
+      </div>
+      <div class="sub-menu">
+        <div class="layout-siderbar__logo">
+          <img src="@/assets/jiutian.png" />
+        </div>
+        <div class="layout-siderbar__title">
+          <div class="divide"></div>
+          <p>智能稽核平台</p>
+          <div class="divide"></div>
+        </div>
+      </div>
+
       <Sidebar />
     </a-layout-sider>
     <a-layout>
@@ -50,7 +64,21 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="less">
+.ant-layout-sider {
+  background: #172b4d;
+}
+.ant-menu-dark,
+.ant-menu-dark .ant-menu-sub {
+  background: #172b4d;
+}
+.ant-menu-item {
+  background: #172b4d;
+}
+.ant-menu-dark.ant-menu-inline .ant-menu-item,
+.ant-menu-dark.ant-menu-inline .ant-menu-submenu-title {
+  margin: 0;
+}
 .layout-header {
   display: flex;
   justify-content: space-between;
@@ -81,9 +109,39 @@ export default {
 }
 
 #components-layout-demo-custom-trigger .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
+  padding: 15px 60px;
+  background: #081a39;
+}
+#components-layout-demo-custom-trigger .logo img {
+  width: 90px;
+}
+.sub-menu {
+  .layout-siderbar__logo {
+    height: 32px;
+    margin: 16px;
+    text-align: center;
+    img {
+      height: 120%;
+    }
+  }
+  .layout-siderbar__title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 16px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    padding: 16px;
+    .divide {
+      width: 16px;
+      height: 1px;
+      background: #ffffff;
+      opacity: 0.19;
+    }
+    p {
+      margin: 0 16px;
+    }
+  }
 }
 .ant-layout-header {
   text-align: left;
