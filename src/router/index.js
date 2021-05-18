@@ -1,16 +1,22 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
+
 //layout
 import Layout from "../components/Layout/Layout.vue";
+
+// import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
+
+//views
+import Checkall from "../views/Checkall/Checkall.vue";
+import Elecfee from "../views/Elecfee/Elecfee.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: "/",
-        redirect: "/home",
+        redirect: "/checkall",
     },
     {
         path: "/login",
@@ -18,24 +24,29 @@ const routes = [
         component: Login,
     },
     {
-        path: "/home",
+        path: "/checkall",
         component: Layout,
         children: [
             {
-                path: "/home",
-                name: "Home",
-                component: Home,
+                path: "",
+                name: "checkall",
+                component: Checkall,
             },
         ],
     },
     {
-        path: "/about",
-        name: "About",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "about" */ "../views/About.vue"),
+        path: "/elecfee",
+        component: Layout,
+        children: [
+            {
+                path: "",
+                name: "elecfee",
+                component: () =>
+                    import(
+                        /* webpackChunkName: "about" */ "../views/Elecfee/Elecfee.vue"
+                    ),
+            },
+        ],
     },
 ];
 

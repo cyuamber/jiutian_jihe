@@ -2,33 +2,7 @@
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <div class="logo" />
-      <a-menu
-        theme="dark"
-        mode="inline"
-        :default-selected-keys="['feeall']"
-        :default-open-keys="['networkfee']"
-      >
-        <a-sub-menu key="networkfee">
-          <span slot="title">
-            <a-icon type="dashboard" />
-            <span>网络费用稽核</span>
-          </span>
-          <template>
-            <a-menu-item key="feeall">
-              <span>稽核总览</span>
-            </a-menu-item>
-            <a-menu-item key="elecfee">
-              <span>电费稽核</span>
-            </a-menu-item>
-            <a-menu-item key="2">
-              <span>铁塔服务费稽核</span>
-            </a-menu-item>
-            <a-menu-item key="3">
-              <span>租费稽核</span>
-            </a-menu-item>
-          </template>
-        </a-sub-menu>
-      </a-menu>
+      <Sidebar />
     </a-layout-sider>
     <a-layout>
       <a-layout-header class="layout-header">
@@ -42,10 +16,11 @@
             <a-menu slot="overlay">
               <a-menu-item key="1"> 登出 </a-menu-item>
             </a-menu>
-            <a>Button <a-icon type="down" /></a>
+            <a>User name <a-icon type="down" /></a>
           </a-dropdown>
         </div>
       </a-layout-header>
+      <Breadcrum class="layout-breadcrum" />
       <a-layout-content
         :style="{
           height: '100vh',
@@ -55,13 +30,19 @@
           minHeight: '280px',
         }"
       >
-        Content
+        <router-view />
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
+import Breadcrum from "./Breadcrum";
+import Sidebar from "./Sidebar";
 export default {
+  components: {
+    Breadcrum,
+    Sidebar,
+  },
   data() {
     return {
       collapsed: false,
@@ -75,6 +56,13 @@ export default {
   justify-content: space-between;
   background: #fff;
   padding: 0;
+  box-shadow: 0px -1px 8px 1px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+.layout-breadcrum {
+  background: #ffffff;
+  padding: 20px 24px;
+  text-align: left;
 }
 .layout-header .header-operation {
   margin-right: 24px;

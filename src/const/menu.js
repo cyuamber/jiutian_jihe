@@ -2,60 +2,36 @@ export default {
     menuItems: [
         {
             auth: ["admin", "customer"],
-            name: "Dashboard",
+            name: "网络费用稽核",
+            key: "check",
             iconType: "dashboard",
-            isChildren: false,
-            children: null,
-        },
-        {
-            auth: ["admin"],
-            name: "Test ENV MGT",
-            iconType: "upload",
             isChildren: true,
             children: [
                 {
                     auth: ["admin", "customer"],
-                    name: "VIM/VNFM/MANO ENV MGT",
+                    name: "稽核总览",
+                    key: "checkall",
                     iconType: "",
                 },
                 {
                     auth: ["admin", "customer"],
-                    name: "Instrument MGS MGT",
+                    name: "电费稽核",
+                    key: "elecfee",
                     iconType: "",
                 },
-                {
-                    auth: ["admin", "customer"],
-                    name: "Instrument Package MGT",
-                    iconType: "",
-                },
+                // {
+                //     auth: ["admin", "customer"],
+                //     name: "铁塔服务费稽核",
+                //     key: "ironcheck",
+                //     iconType: "",
+                // },
+                // {
+                //     auth: ["admin"],
+                //     name: "租费稽核",
+                //     key: "rentfeecheck",
+                //     iconType: "",
+                // },
             ],
-        },
-        {
-            auth: ["admin", "customer"],
-            name: "Test Objects MGT",
-            iconType: "laptop",
-            isChildren: true,
-            children: [
-                {
-                    auth: ["admin", "customer"],
-                    name: "Test SUT MGT",
-                    iconType: "",
-                },
-            ],
-        },
-        {
-            auth: ["admin"],
-            name: "Test Job MGT",
-            iconType: "cloud-o",
-            isChildren: false,
-            children: null,
-        },
-        {
-            auth: ["admin", "customer"],
-            name: "Test Spec MGT",
-            iconType: "team",
-            isChildren: false,
-            children: null,
         },
     ],
 };

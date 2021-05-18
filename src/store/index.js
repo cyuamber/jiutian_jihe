@@ -1,15 +1,17 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
+import login from "./modules/components/login";
+import breadcrum from "./modules/components/breadcrum";
+// import createLogger from 'vuex/dist/logger'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
-})
+const store = new Vuex.Store({
+    // plugins: process.env.NODE_ENV !== 'production' ? [createLogger()] : [],
+    modules: {
+        login,
+        breadcrum,
+    },
+});
+
+export default store;
