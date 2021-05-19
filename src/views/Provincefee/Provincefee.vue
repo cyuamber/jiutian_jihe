@@ -1,8 +1,7 @@
 <template>
   <div>
-    <p>电费稽核</p>
+    省详情
     <a-button @click="JumpToDetail">稽核详情</a-button>
-    <a-button @click="JumpToProvince">省级详情</a-button>
   </div>
 </template>
 
@@ -20,21 +19,9 @@ export default {
         path: "/checkdetail",
       });
     },
-    JumpToProvince() {
-      this.$store.dispatch("setCurrentBread", [
-        {
-          path: "provincefee",
-          breadcrumbName: "省级详情",
-        },
-      ]);
-      this.$router.push({
-        path: "/provincefee",
-      });
-    },
   },
 };
 </script>
-
 
 <style>
 </style>

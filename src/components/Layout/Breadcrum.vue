@@ -4,10 +4,22 @@
       <span v-if="routes.indexOf(route) === routes.length - 1">
         {{ route.breadcrumbName }}
       </span>
-      <span v-else @click="JumptobreadLink">
-        <router-link :to="paths.join('/')">
+      <span v-else>
+        <a
+          @click="JumptobreadLink"
+          :href="`#/${
+            paths.length === 1
+              ? paths[0]
+              : paths.length === 0
+              ? ''
+              : paths[paths.length - 1]
+          }`"
+        >
           {{ route.breadcrumbName }}
-        </router-link>
+        </a>
+        <!-- <a @click="JumptobreadLink" :href="`#/${JSON.stringify(paths)}`">
+          {{ route.breadcrumbName }}
+        </a> -->
       </span>
     </template>
   </a-breadcrumb>
@@ -26,15 +38,29 @@ export default {
   data() {
     return {
       routes: this.breadcrumbArr,
+      breadLink: "",
     };
   },
   methods: {
     JumptobreadLink(e) {
-      const currentHash = e.target.hash.substr(2);
+      console.log(e.target, e);
+      let hashStr = e.target.hash.substr(2);
+
+      const matchedStr = hashStr.match(/\/(\S*)/);
+      const currentHash = matchedStr ? matchedStr[1] : hashStr;
+      console.log(currentHash, "====>点击的bread的hash");
+      this.breadLink = `/${currentHash}`;
+      ///更新url的操作
+      this.$router.push({
+        path: currentHash,
+      });
       let updateBread = this.breadcrumbArr;
+      // console.log(currentHash, updateBread, "---");
+      const breadLength = updateBread.length;
+      //更新面包屑的操作
       updateBread.map((bread, i) => {
         if (bread.path === currentHash) {
-          updateBread.splice(i + 1);
+          updateBread = updateBread.splice(0, i + 1);
         }
       });
       this.$store.commit("setBreadcrumb", updateBread);

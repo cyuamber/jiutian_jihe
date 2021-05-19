@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       menus: [],
-      defaultSelectedKeys: [""],
+      defaultSelectedKeys: ["checkall"],
       defaultOpenKeys: [""],
       selectedKeys: [""],
     };
@@ -50,27 +50,37 @@ export default {
   },
 
   methods: {
+    updateCurrentBreads() {
+      const currentHash = location.hash.substr(2);
+      let targetMenuArr = [];
+      this.menus.map((menuItem) => {
+        if (menuItem.key === currentHash) {
+          this.selectedKeys = [currentHash];
+        } else {
+          if (menuItem.isChildren) {
+            menuItem.children.map((item) => {
+              if (item.key === currentHash) {
+                targetMenuArr.push(menuItem.key, item.key);
+              }
+            });
+          }
+        }
+      });
+      this.selectedKeys = targetMenuArr;
+      this.$store.dispatch("getCurrentBread", {
+        breads: targetMenuArr,
+        menus: this.menus,
+      });
+    },
     getCurrentMenu() {
       window.addEventListener("hashchange", () => {
-        const currentHash = location.hash.substr(2);
-        let targetMenuArr = [];
-        this.menus.map((menuItem) => {
-          if (menuItem.key === currentHash) {
-            this.selectedKeys = [currentHash];
-          } else {
-            if (menuItem.isChildren) {
-              menuItem.children.map((item) => {
-                if (item.key === currentHash) {
-                  targetMenuArr.push(menuItem.key, item.key);
-                }
-              });
-            }
-          }
-        });
-        this.selectedKeys = targetMenuArr;
-        this.$store.dispatch("getCurrentBread", {
-          breads: targetMenuArr,
-          menus: this.menus,
+        this.updateCurrentBreads();
+      });
+      //禁止掉浏览器的后退行为
+      window.addEventListener("popstate", () => {
+        history.pushState(null, null, document.URL);
+        window.addEventListener("popstate", function () {
+          history.pushState(null, null, document.URL);
         });
       });
       window.onbeforeunload = () => {

@@ -1,6 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+//解决重复点击vue导航报错的问题
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch((error) => {});
+};
+
 //layout
 import Layout from "../components/Layout/Layout.vue";
 
@@ -11,6 +17,7 @@ import Login from "../views/Login.vue";
 import Checkall from "../views/Checkall/Checkall.vue";
 import Elecfee from "../views/Elecfee/Elecfee.vue";
 import CheckDetail from "../views/CheckDetail/CheckDetail.vue";
+import Provincefee from "../views/Provincefee/Provincefee.vue";
 
 Vue.use(VueRouter);
 
@@ -57,6 +64,17 @@ const routes = [
                     import(
                         /* webpackChunkName: "about" */ "../views/Elecfee/Elecfee.vue"
                     ),
+            },
+        ],
+    },
+    {
+        path: "/provincefee",
+        component: Layout,
+        children: [
+            {
+                path: "",
+                name: "provincefee",
+                component: Provincefee,
             },
         ],
     },
