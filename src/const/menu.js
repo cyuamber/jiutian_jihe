@@ -3,7 +3,7 @@ export default {
         {
             auth: ["admin", "customer"],
             name: "网络费用稽核",
-            key: "check",
+            key: "",
             iconType: "dashboard",
             isChildren: true,
             children: [

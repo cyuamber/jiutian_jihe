@@ -1,9 +1,26 @@
 <template>
-  <div>稽核总览页面</div>
+  <div>
+    <p>稽核总览</p>
+    <a-button @click="JumpToDetail">稽核详情</a-button>
+  </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    JumpToDetail() {
+      this.$store.dispatch("setCurrentBread", [
+        {
+          path: "checkdetail",
+          breadcrumbName: "稽核详情",
+        },
+      ]);
+      this.$router.push({
+        path: "/checkdetail",
+      });
+    },
+  },
+};
 </script>
 
 <style>

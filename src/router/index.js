@@ -10,6 +10,7 @@ import Login from "../views/Login.vue";
 //views
 import Checkall from "../views/Checkall/Checkall.vue";
 import Elecfee from "../views/Elecfee/Elecfee.vue";
+import CheckDetail from "../views/CheckDetail/CheckDetail.vue";
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,17 @@ const routes = [
                 path: "",
                 name: "checkall",
                 component: Checkall,
+            },
+        ],
+    },
+    {
+        path: "/checkdetail",
+        component: Layout,
+        children: [
+            {
+                path: "",
+                name: "checkdetail",
+                component: CheckDetail,
             },
         ],
     },

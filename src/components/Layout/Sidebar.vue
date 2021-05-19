@@ -3,8 +3,9 @@
     <a-menu
       theme="dark"
       mode="inline"
-      :default-selected-keys="['checkall']"
-      :default-open-keys="['check']"
+      :default-selected-keys="defaultSelectedKeys"
+      :default-open-keys="defaultOpenKeys"
+      :selectedKeys="selectedKeys"
       @click="clickMenu"
     >
       <a-sub-menu v-for="menu in menus" :key="menu.key">
@@ -22,65 +23,90 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapState, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 // import util from "../../utils/utils";
 import MENUITEM from "../../const/menu";
-
-const menuStyle = {
-  border: "none",
-  borderTop: "2px solid #f0f2f5",
-};
 
 export default {
   name: "Sidebar",
   data() {
     return {
       menus: [],
+      defaultSelectedKeys: [""],
+      defaultOpenKeys: [""],
+      selectedKeys: [""],
     };
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      breadcrumbArr: (state) => state.breadcrum.breadcrumbArr,
+    }),
+  },
   created() {
     this.menus = MENUITEM.menuItems;
   },
+  beforeMount() {
+    this.getCurrentMenu();
+  },
 
   methods: {
+    getCurrentMenu() {
+      window.addEventListener("hashchange", () => {
+        const currentHash = location.hash.substr(2);
+        let targetMenuArr = [];
+        this.menus.map((menuItem) => {
+          if (menuItem.key === currentHash) {
+            this.selectedKeys = [currentHash];
+          } else {
+            if (menuItem.isChildren) {
+              menuItem.children.map((item) => {
+                if (item.key === currentHash) {
+                  targetMenuArr.push(menuItem.key, item.key);
+                }
+              });
+            }
+          }
+        });
+        this.selectedKeys = targetMenuArr;
+        this.$store.dispatch("getCurrentBread", {
+          breads: targetMenuArr,
+          menus: this.menus,
+        });
+      });
+      window.onbeforeunload = () => {
+        window.localStorage.setItem(
+          "lastBreads",
+          JSON.stringify(this.breadcrumbArr)
+        );
+      };
+      window.onload = () => {
+        const lastBread = window.localStorage.getItem("lastBreads");
+        this.$store.commit("setBreadcrumb", JSON.parse(lastBread));
+        let currentMenu = [];
+        this.breadcrumbArr.map((item) => {
+          currentMenu.push(item.path || "");
+        });
+        this.defaultSelectedKeys = currentMenu;
+        this.selectedKeys = currentMenu;
+      };
+    },
     clickMenu(e) {
       let routePath = e.keyPath[0];
+      this.selectedKeys = e.keyPath;
       let breadArr = e.keyPath;
+      breadArr.reverse();
+      this.$store.dispatch("getCurrentBread", {
+        breads: breadArr,
+        menus: this.menus,
+      });
       this.$router.push({
         path: `/${routePath}`,
       });
-      // routes: [checkall,check]
-      //   routes: [
-      //       {
-      //         path: "/",
-      //         breadcrumbName: "网络费用稽核",
-      //       },
-      //       {
-      //         path: "home",
-      //         breadcrumbName: "稽核总览",
-      //       },
-      //     ],
-      breadArr.reverse();
-      let newArr = [];
-      this.menus.map((menuItem) => {
-        if (breadArr.indexOf(menuItem.key) !== -1) {
-          newArr.push({ breadcrumbName: menuItem.name });
-          if (menuItem.isChildren) {
-            menuItem.children.map((menu) => {
-              if (breadArr.indexOf(menu.key) !== -1) {
-                newArr.push({ path: menu.key, breadcrumbName: menu.name });
-              }
-            });
-          }
-        }
-      });
-      this.$store.dispatch("getCurrentBread", newArr);
     },
   },
 };
 </script>
 <style lang="less" scoped>
-.layout-siderbar {
-}
+// .layout-siderbar {
+// }
 </style>
