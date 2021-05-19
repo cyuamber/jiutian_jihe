@@ -38,25 +38,18 @@ export default {
   data() {
     return {
       routes: this.breadcrumbArr,
-      breadLink: "",
     };
   },
   methods: {
     JumptobreadLink(e) {
-      console.log(e.target, e);
       let hashStr = e.target.hash.substr(2);
-
       const matchedStr = hashStr.match(/\/(\S*)/);
       const currentHash = matchedStr ? matchedStr[1] : hashStr;
-      console.log(currentHash, "====>点击的bread的hash");
-      this.breadLink = `/${currentHash}`;
       ///更新url的操作
       this.$router.push({
         path: currentHash,
       });
       let updateBread = this.breadcrumbArr;
-      // console.log(currentHash, updateBread, "---");
-      const breadLength = updateBread.length;
       //更新面包屑的操作
       updateBread.map((bread, i) => {
         if (bread.path === currentHash) {
@@ -68,6 +61,3 @@ export default {
   },
 };
 </script>
-
-
-

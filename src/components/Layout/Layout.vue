@@ -1,11 +1,15 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <div class="logo">
-        <img v-if="!collapsed" src="@/assets/logo.png" />
-        <img v-else-if="collapsed" src="@/assets/cmcc.png" />
+      <div :class="collapsed ? 'collapsed-logo' : 'logo'">
+        <img id="uncollapsed-logo" v-if="!collapsed" src="@/assets/logo.png" />
+        <img
+          id="collapsed-logo"
+          v-else-if="collapsed"
+          src="@/assets/cmcc.png"
+        />
       </div>
-      <div class="sub-menu">
+      <div v-if="!collapsed" class="sub-menu">
         <div class="layout-siderbar__logo">
           <img src="@/assets/jiutian.png" />
         </div>
@@ -26,12 +30,19 @@
           @click="() => (collapsed = !collapsed)"
         />
         <div class="header-operation">
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item key="1"> 登出 </a-menu-item>
-            </a-menu>
-            <a>User name <a-icon type="down" /></a>
-          </a-dropdown>
+          <div class="header-operation--item">消息中心</div>
+          <div class="header-operation--item">帮助中心</div>
+          <div class="header-operation--item">
+            <a-dropdown>
+              <a-menu slot="overlay">
+                <a-menu-item key="1" @click="gotoLogout">
+                  <a-icon type="logout" />
+                  <span>退出登录</span>
+                </a-menu-item>
+              </a-menu>
+              <span>User name <a-icon type="caret-down" /></span>
+            </a-dropdown>
+          </div>
         </div>
       </a-layout-header>
       <Breadcrum class="layout-breadcrum" />
@@ -62,6 +73,23 @@ export default {
       collapsed: false,
     };
   },
+  methods: {
+    gotoLogout() {
+      this.$confirm({
+        title: "您确定登出吗？",
+        content: "登出将不再保存您的个性化内容",
+        okText: "确定",
+        okButtonProps: {},
+        cancelText: "取消",
+        onOk() {
+          window.location.href = "#/login";
+        },
+        onCancel() {
+          console.log("Cancel");
+        },
+      });
+    },
+  },
 };
 </script>
 <style lang="less">
@@ -80,6 +108,7 @@ export default {
   margin: 0;
 }
 .layout-header {
+  height: 56px;
   display: flex;
   justify-content: space-between;
   background: #fff;
@@ -88,12 +117,25 @@ export default {
   z-index: 2;
 }
 .layout-breadcrum {
+  height: 58px;
   background: #ffffff;
   padding: 20px 24px;
   text-align: left;
 }
 .layout-header .header-operation {
   margin-right: 24px;
+  display: flex;
+  .header-operation--item {
+    height: 100%;
+    padding: 0 16px;
+    font-size: 12px;
+    border-left: 1px solid #f4f4f4;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: #333333;
+  }
+  .header-operation--item:last-child {
+    border-right: 1px solid #f4f4f4;
+  }
 }
 
 #components-layout-demo-custom-trigger .trigger {
@@ -112,9 +154,18 @@ export default {
   padding: 15px 60px;
   background: #081a39;
 }
-#components-layout-demo-custom-trigger .logo img {
+#components-layout-demo-custom-trigger .logo #uncollapsed-logo {
   width: 90px;
 }
+
+.collapsed-logo {
+  padding: 14px;
+  background: #081a39;
+  #collapsed-logo {
+    width: 27px;
+  }
+}
+
 .sub-menu {
   .layout-siderbar__logo {
     height: 32px;

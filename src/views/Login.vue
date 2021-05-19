@@ -9,7 +9,7 @@ export default {
   methods: {
     jumpToHome() {
       this.$router.push({
-        path: "/home",
+        path: "/checkall",
       });
     },
   },
