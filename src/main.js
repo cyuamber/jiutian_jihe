@@ -7,6 +7,15 @@ import store from "./store";
 import Axios from "axios";
 
 Vue.prototype.$axios = Axios;
+Axios.defaults.headers.post["Content-Type"] = "application/json";
+
+let proEnv = require("../config/pro.env");
+if (process.env.NODE_ENV === "development") {
+    Axios.defaults.baseURL = "/api";
+}
+if (process.env.NODE_ENV === "production") {
+    Axios.defaults.baseURL = `http://${window.location.hostname}:${proEnv.port}/`;
+}
 
 Vue.config.productionTip = false;
 

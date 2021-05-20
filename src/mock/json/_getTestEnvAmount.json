@@ -1,9 +1,0 @@
-{
-  "code": 200,
-  "message": "OK",
-  "body": {
-    "instcount":5,
-    "vimcount":7,
-    "vnfmcount":14
-  }
-}

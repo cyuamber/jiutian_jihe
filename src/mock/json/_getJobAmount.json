@@ -1,8 +1,0 @@
-{
-  "code": 200,
-  "message": "OK",
-  "body": {
-    "successcount":5,
-    "failedcount":12
-  }
-}

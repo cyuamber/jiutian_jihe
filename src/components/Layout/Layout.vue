@@ -49,9 +49,7 @@
       <a-layout-content
         :style="{
           height: '100vh',
-          margin: '24px 16px',
-          padding: '24px',
-          background: '#fff',
+          margin: '24px',
           minHeight: '280px',
         }"
       >

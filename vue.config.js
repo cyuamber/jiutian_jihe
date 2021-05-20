@@ -7,9 +7,10 @@ let proxyObj = {};
 if (env === "development") {
     devProxy.forEach((value) => {
         proxyObj[value] = {
-            target: devEnv.hosturl,
+            target: "http://localhost:3004",
             changeOrigin: true,
             pathRewrite: {
+                "^/api": "/",
                 [`^${value}`]: "",
             },
         };
