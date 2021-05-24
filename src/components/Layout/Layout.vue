@@ -48,7 +48,7 @@
       <Breadcrum class="layout-breadcrum" />
       <a-layout-content
         :style="{
-          height: '100vh',
+          minHeight: '100vh',
           margin: '24px',
           minHeight: '280px',
         }"

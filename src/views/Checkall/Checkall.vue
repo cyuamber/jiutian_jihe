@@ -61,8 +61,60 @@
       </div>
     </div>
     <div class="detail-section">
-      <p>稽核详情</p>
-      <a-button @click="JumpToDetail">稽核详情</a-button>
+      <div class="header">
+        <p>稽核详情</p>
+        <div class="operations">
+          <a-radio-group class="radio" defaultValue="count">
+            <a-radio-button value="count"> 数量 </a-radio-button>
+            <a-radio-button value="number"> 金额 </a-radio-button>
+          </a-radio-group>
+          <a-select
+            class="select"
+            :default-value="['elec', 'tower', 'rent']"
+            mode="multiple"
+            style="width: 240px"
+          >
+            <a-select-option value="elec"> 电费 </a-select-option>
+            <a-select-option value="tower"> 铁塔 </a-select-option>
+            <a-select-option value="rent"> 租费 </a-select-option>
+          </a-select>
+          <a-button class="button" @click="JumpToDetail" type="primary"
+            >查看更多
+          </a-button>
+        </div>
+      </div>
+      <div class="table">
+        <a-table
+          :columns="checkallTableColumns"
+          :data-source="checkallTable"
+          :rowKey="(record, index) => index"
+          :pagination="false"
+        >
+          <template slot="notpass" slot-scope="text">
+            <span class="red">{{ text }}</span>
+          </template>
+          <template slot="notpassper" slot-scope="text">
+            <span>{{ `${text}%` }}</span>
+          </template>
+        </a-table>
+        <div class="pagination">
+          <div class="left-pagination">
+            <span>共148条记录</span>
+            <div style="margin-left: 16px">
+              <span>每页显示</span>
+              <a-select
+                default-value="10"
+                style="min-width: 50px; margin: 0 5px"
+              >
+                <a-select-option value="10"> 10 </a-select-option>
+                <a-select-option value="20"> 20 </a-select-option>
+              </a-select>
+              <span>条</span>
+            </div>
+          </div>
+          <a-pagination show-quick-jumper :default-current="1" :total="15" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -246,11 +298,34 @@ export default {
     padding: 37px 24px;
     background: #ffffff;
     text-align: left;
-    p {
-      font-size: 16px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: bold;
-      color: #343642;
+    .header {
+      display: flex;
+      justify-content: space-between;
+
+      p {
+        font-size: 16px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: bold;
+        color: #343642;
+      }
+      .select {
+        margin-left: 8px;
+      }
+      .button {
+        margin-left: 24px;
+      }
+    }
+    .table {
+      margin-top: 15px;
+      .pagination {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+        .left-pagination {
+          display: flex;
+          align-items: center;
+        }
+      }
     }
   }
 }
