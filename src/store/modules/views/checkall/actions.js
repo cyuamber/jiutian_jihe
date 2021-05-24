@@ -14,6 +14,20 @@ const actions = {
             }
         );
     },
+    getCheckallTableData({ commit }) {
+        axiosget("/portal/business/getcheckalltable").then(
+            (res) => {
+                if (+res.code === 200) {
+                    commit("updateCheckAllTable", res.data);
+                } else {
+                    console.error("数据错了");
+                }
+            },
+            () => {
+                console.error("error");
+            }
+        );
+    },
 };
 
 export default actions;

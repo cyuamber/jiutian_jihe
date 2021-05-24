@@ -5,8 +5,11 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import Axios from "axios";
+import * as echarts from "echarts";
 
+Vue.prototype.$echarts = echarts;
 Vue.prototype.$axios = Axios;
+
 Axios.defaults.headers.post["Content-Type"] = "application/json";
 
 let proEnv = require("../config/pro.env");

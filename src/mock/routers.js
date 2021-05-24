@@ -6,6 +6,7 @@ module.exports = {
     ///////<-------------Checkall--------->/////
     // "/portal/getcheckfee": "/_getCheckallAmout",
     "/portal/business/getcheckfee": "/_getCheckallAmout",
+    "/portal/business/getcheckalltable": "/_getCheckallTableAmount",
 
     ///////<-------------VimEnv--------->/////
 
