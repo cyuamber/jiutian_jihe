@@ -21,6 +21,13 @@ export default {
                 },
                 // {
                 //     auth: ["admin", "customer"],
+                //     name: "稽核详情",
+                //     key: "elecfee",
+                //     key: "elecfeeDetail",
+                //     iconType: "",
+                // },
+                // {
+                //     auth: ["admin", "customer"],
                 //     name: "铁塔服务费稽核",
                 //     key: "ironcheck",
                 //     iconType: "",

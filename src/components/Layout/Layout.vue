@@ -30,8 +30,8 @@
           @click="() => (collapsed = !collapsed)"
         />
         <div class="header-operation">
-          <div class="header-operation--item">消息中心</div>
-          <div class="header-operation--item">帮助中心</div>
+          <!-- <div class="header-operation--item">消息中心</div>
+          <div class="header-operation--item">帮助中心</div> -->
           <div class="header-operation--item">
             <a-dropdown>
               <a-menu slot="overlay">
@@ -40,7 +40,7 @@
                   <span>退出登录</span>
                 </a-menu-item>
               </a-menu>
-              <span>User name <a-icon type="caret-down" /></span>
+              <span>{{ UserName }}<a-icon type="caret-down" /></span>
             </a-dropdown>
           </div>
         </div>
@@ -69,7 +69,16 @@ export default {
   data() {
     return {
       collapsed: false,
+      UserName: "user name",
     };
+  },
+  mounted() {
+    const loginName = window.sessionStorage.getItem("username");
+    if (typeof loginName === "string") {
+      this.UserName = loginName;
+    } else {
+      window.location.href = "#/login";
+    }
   },
   methods: {
     gotoLogout() {
@@ -133,9 +142,9 @@ export default {
   }
   .header-operation--item:last-child {
     border-right: 1px solid #f4f4f4;
+    cursor: pointer;
   }
 }
-
 #components-layout-demo-custom-trigger .trigger {
   font-size: 18px;
   line-height: 64px;

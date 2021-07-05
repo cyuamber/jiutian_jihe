@@ -16,17 +16,18 @@
     <div class="right">
       <div class="item">
         <span class="number">{{ upNumber }}</span>
-        <span class="count">单</span>
+        <span class="count">万单</span>
       </div>
       <div class="item">
         <span class="number">{{ downNumber }}</span>
-        <span class="count">元</span>
+        <span class="count">亿元</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import util from "../../utils/utils";
 export default {
   name: "HeadItem",
   props: {
@@ -53,19 +54,27 @@ export default {
   },
   watch: {
     currentData(newValue) {
-      this.upNumber = newValue.number;
-      this.downNumber = newValue.count;
+      if (this.headTitle === "电费") {
+        this.upNumber = util.transferNum(Number(newValue.total_number) / 10000);
+        this.downNumber = util.transferNum(
+          Number(newValue.total_amount) / 100000000
+        );
+      } else {
+        this.upNumber = 0;
+        this.downNumber = 0;
+      }
     },
   },
   data() {
     return {
-      upNumber: this.currentData.number,
-      downNumber: this.currentData.count,
+      upNumber: util.transferNum(Number(this.currentData.total_number) / 10000),
+      downNumber: util.transferNum(
+        Number(this.currentData.total_amount) / 100000000
+      ),
     };
   },
   methods: {
     JumptoOtherPage(page = 1) {
-      console.log(page);
       switch (page) {
         case 1:
           window.location.hash = "/elecfee";
@@ -82,7 +91,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .head-item {
   width: 380px;
   margin-right: 24px;
@@ -98,6 +107,7 @@ export default {
     align-items: center;
     img {
       width: 72px;
+      margin-top: 5px;
     }
     .right-item {
       span {

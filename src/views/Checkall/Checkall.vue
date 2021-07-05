@@ -7,17 +7,17 @@
         :headTitle="i.headTitle"
         :icon="i.icon"
         :toolpit="i.toolpit"
-        :currentData="headData[k] || {}"
+        :currentData="headData || {}"
       />
     </div>
     <div class="overview-section">
       <div class="overview-head">
         <p>稽核概况</p>
-        <a-radio-group>
+        <a-radio-group defaultValue="all" @change="handleChartRange">
           <a-radio-button value="all"> 全部 </a-radio-button>
           <a-radio-button value="year"> 近一年 </a-radio-button>
-          <a-radio-button value="month"> 近三月 </a-radio-button>
-          <a-radio-button value="halfyear"> 近半年 </a-radio-button>
+          <a-radio-button value="three"> 近三月 </a-radio-button>
+          <a-radio-button value="six"> 近半年 </a-radio-button>
         </a-radio-group>
       </div>
       <div class="overview-chart">
@@ -34,10 +34,12 @@
             <p>各类稽核数量对比</p>
           </div>
           <div class="pieCenter">
-            <p class="pieCenter-title">稽核总量 (万)</p>
+            <p class="pieCenter-title">
+              {{ `稽核总量${currentType === "0" ? "（万)" : "（亿)"}` }}
+            </p>
             <p class="pieCenter-number">{{ checkallPieNumber }}</p>
           </div>
-          <div id="piechart" style="height: 100%; width: 80%"></div>
+          <div id="piechart" style="height: 100%; width: 100%"></div>
         </div>
       </div>
       <div class="overview-table">
@@ -51,11 +53,64 @@
           :rowKey="(record, index) => index"
           :pagination="false"
         >
-          <template slot="notpass" slot-scope="text">
-            <span class="red">{{ text }}</span>
+          <template slot="rank" slot-scope="text, all, i">
+            <span>{{ i + 1 }}</span>
           </template>
-          <template slot="notpassper" slot-scope="text">
-            <span>{{ `${text}%` }}</span>
+          <template slot="type">
+            <span>电费</span>
+          </template>
+
+          <template slot="ninetoten" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="eighttonine" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="sixtoeight" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+
+          <template slot="zerotosix" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+
+          <template slot="pass_number" slot-scope="text, all">
+            <span>{{
+              all.pass_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(all.pass_amount / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="notpass_number" slot-scope="text, all">
+            <span>{{
+              all.notpass_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(all.notpass_amount / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+
+          <template slot="total_number" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(all.total_amount / 100000000).toFixed(2)}亿`
+            }}</span>
           </template>
         </a-table>
       </div>
@@ -64,20 +119,14 @@
       <div class="header">
         <p>稽核详情</p>
         <div class="operations">
-          <a-radio-group class="radio" defaultValue="count">
-            <a-radio-button value="count"> 数量 </a-radio-button>
-            <a-radio-button value="number"> 金额 </a-radio-button>
-          </a-radio-group>
-          <a-select
-            class="select"
-            :default-value="['elec', 'tower', 'rent']"
-            mode="multiple"
-            style="width: 240px"
+          <a-radio-group
+            class="radio"
+            :value="currentType"
+            @change="handleType"
           >
-            <a-select-option value="elec"> 电费 </a-select-option>
-            <a-select-option value="tower"> 铁塔 </a-select-option>
-            <a-select-option value="rent"> 租费 </a-select-option>
-          </a-select>
+            <a-radio-button value="0"> 数量 </a-radio-button>
+            <a-radio-button value="1"> 金额 </a-radio-button>
+          </a-radio-group>
           <a-button class="button" @click="JumpToDetail" type="primary"
             >查看更多
           </a-button>
@@ -85,34 +134,92 @@
       </div>
       <div class="table">
         <a-table
-          :columns="checkallTableColumns"
-          :data-source="checkallTable"
+          :columns="checkdetailTableColumns"
+          :data-source="checkallDetail"
           :rowKey="(record, index) => index"
           :pagination="false"
+          :loading="detailTableLoading"
         >
-          <template slot="notpass" slot-scope="text">
-            <span class="red">{{ text }}</span>
+          <template slot="rank" slot-scope="text, all, i">
+            <span>{{ i + 1 }}</span>
           </template>
-          <template slot="notpassper" slot-scope="text">
-            <span>{{ `${text}%` }}</span>
+          <template slot="type">
+            <span>电费</span>
+          </template>
+          <template slot="ninetoten" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="eighttonine" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="sixtoeight" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="zerotosix" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(text / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="total_number" slot-scope="text, all">
+            <span>{{
+              all.total_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(all.total_amount / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="pass_number" slot-scope="text, all">
+            <span>{{
+              all.pass_number
+                ? `${(text / 10000).toFixed(2)}万`
+                : `${(all.pass_amount / 100000000).toFixed(2)}亿`
+            }}</span>
+          </template>
+          <template slot="notpass_number" slot-scope="text, all">
+            <span class="red">{{
+              text || `${(all.notpass_amount / 10000).toFixed(2)}万`
+            }}</span>
           </template>
         </a-table>
         <div class="pagination">
           <div class="left-pagination">
-            <span>共148条记录</span>
+            <span>共{{ totalPage }}条记录</span>
             <div style="margin-left: 16px">
               <span>每页显示</span>
               <a-select
                 default-value="10"
                 style="min-width: 50px; margin: 0 5px"
+                @change="handleDetailPagesize"
               >
+                <a-select-option value="5"> 5</a-select-option>
                 <a-select-option value="10"> 10 </a-select-option>
+                <a-select-option value="15"> 15 </a-select-option>
                 <a-select-option value="20"> 20 </a-select-option>
               </a-select>
               <span>条</span>
             </div>
           </div>
-          <a-pagination show-quick-jumper :default-current="1" :total="15" />
+          <a-pagination
+            show-quick-jumper
+            :default-current="1"
+            :total="totalPage"
+            :current="detailPage"
+            :pageSize="detailPagesize"
+            @change="handlePaginationChange"
+          />
         </div>
       </div>
     </div>
@@ -125,9 +232,11 @@ import {
   HeadItems,
   linechartOptions,
   piechartOptions,
-  checkallCoulmns,
+  checkallColumns,
+  checkdetailColumns,
 } from "./constants";
 import { mapActions, mapState } from "vuex";
+import util from "../../utils/utils";
 
 export default {
   components: {
@@ -135,31 +244,44 @@ export default {
   },
   created() {
     this.handleHeadData();
-    this.getCheckallTableData();
+    this.handleTableData(this.initParams);
   },
   mounted() {
     this.drawLines();
+  },
+  watch: {
+    detailTotal(newValue) {
+      this.totalPage = newValue;
+    },
+    checkallDetail() {
+      this.drawLines();
+    },
   },
   computed: {
     ...mapState({
       headData: (state) => state.checkall.headData,
       checkallTable: (state) => state.checkall.checkallTable,
+      checkallParams: (state) => state.checkall.checkallParams,
+      checkallDetail: (state) => state.checkall.checkallDetail,
+      detailTotal: (state) => state.checkall.detailTotal,
+      detailPage: (state) => state.checkall.detailPage,
+      detailPagesize: (state) => state.checkall.detailPagesize,
+      detailTableLoading: (state) => state.checkall.detailTableLoading,
+      lineData: (state) => state.checkall.lineData,
+      pieData: (state) => state.checkall.pieData,
     }),
   },
   data() {
     return {
       headItems: HeadItems,
-      lineData: [120, 200, 150],
-      pieData: [
-        { value: 1048, name: "电费" },
-        { value: 735, name: "铁塔服务费" },
-        { value: 580, name: "租费" },
-      ],
       linechartOptions: linechartOptions,
       piechartOptions: piechartOptions,
-      checkallPieNumber: "1562",
-      checkallTableColumns: checkallCoulmns,
-      checkallTableData: this.checkallTable,
+      checkallPieNumber: 0,
+      currentType: "0",
+      checkallTableColumns: checkallColumns,
+      checkdetailTableColumns: checkdetailColumns,
+      totalPage: 0,
+      initParams: util.getAllTimeRange("all"),
     };
   },
   methods: {
@@ -174,25 +296,67 @@ export default {
       this.$router.push({
         path: "/checkdetail",
       });
+      util.jumpTop();
     },
     handleHeadData() {
-      this.linechartOptions.series[0].data = this.lineData;
+      this.getHeadData(util.getAllTimeRange());
+      this.handleChart();
+    },
+    handleChartRange(e) {
+      const timeRange = e.target.value;
+      const timeParams = util.getAllTimeRange(timeRange);
+      this.getCheckallTableData(Object.assign(timeParams, { page: 1 }));
+      this.drawLines();
+    },
+    handleType(e) {
+      const type = e.target.value;
+      this.currentType = type;
+      this.getCheckallTableData({ object: type, page: 1 });
+    },
+    handleChart() {
+      let formData = [];
+      this.linechartOptions.type = this.currentType;
+      this.piechartOptions.type = this.currentType;
+      this.lineData.map((item) => {
+        if (this.currentType === "0") {
+          formData.push(item / 10000).toFixed(2);
+        } else {
+          formData.push(item / 100000000).toFixed(2);
+        }
+      });
+      this.linechartOptions.series[0].data = formData;
       this.piechartOptions.series[0].data = this.pieData;
-      this.getHeadData();
     },
     drawLines() {
       const lineChart = this.$echarts.init(
         document.getElementById("linechart")
       );
-      lineChart.setOption(this.linechartOptions);
       const piechart = this.$echarts.init(document.getElementById("piechart"));
+      this.handleChart();
+      lineChart.setOption(this.linechartOptions);
       piechart.setOption(this.piechartOptions);
+      this.checkallPieNumber = util.transferNum(
+        this.currentType === "0"
+          ? (Number(this.pieData[0].value) / 10000).toFixed(2)
+          : (Number(this.pieData[0].value) / 100000000).toFixed(2)
+      );
+    },
+    handleTableData(params) {
+      const paramObj = Object.assign(this.checkallParams, params);
+      this.getCheckallTableData(paramObj);
+      this.totalPage = this.detailTotal;
+    },
+    handleDetailPagesize(pageSize) {
+      this.handleTableData({ page: 1, page_size: +pageSize });
+    },
+    handlePaginationChange(page, pageSize) {
+      this.handleTableData({ page: +page, page_size: +pageSize });
     },
   },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .check-all {
   .header-section {
     display: flex;
@@ -316,6 +480,9 @@ export default {
       }
     }
     .table {
+      .red {
+        color: #f24444;
+      }
       margin-top: 15px;
       .pagination {
         display: flex;

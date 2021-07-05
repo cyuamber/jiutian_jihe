@@ -1,16 +1,34 @@
-import MENUITEM from "../../../const/menu";
 const router = {
     state: {
         breadcrumbArr: [],
         currentMenu: [],
+        isProvince: false,
     },
     mutations: {
-        //接受到传入的menu信息，渲染出面包屑
+        setProvince(state, data) {
+            state.isProvince = data;
+        },
         setBreadcrumb(state, data) {
             state.breadcrumbArr = data;
         },
         updateBreadcrumb(state, path) {
-            state.breadcrumbArr = state.breadcrumbArr.concat(path);
+            // console.log(path, state.breadcrumbArr);
+            if (state.breadcrumbArr.length <= 2) {
+                state.breadcrumbArr = state.breadcrumbArr.concat(path);
+            } else {
+                const newBreadPath = state.breadcrumbArr.slice(
+                    0,
+                    state.breadcrumbArr.length - 1
+                );
+                state.breadcrumbArr = newBreadPath.concat(path);
+            }
+        },
+        replaceBreadcrumb(state, path) {
+            const newBreadPath = state.breadcrumbArr.slice(
+                0,
+                state.breadcrumbArr.length - 1
+            );
+            state.breadcrumbArr = newBreadPath.concat(path);
         },
         setCurrentMenu(state, data) {
             state.currentMenu = data;

@@ -8,24 +8,20 @@ const getHeaders = () => ({
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "x-requested-with,content-type",
 });
-const uploadGetHeaders = () => ({
-    "Content-Type": "multipart/form-data",
-});
-export function axiospost(url, data, uploadHeader, callback) {
+
+export function axiospost(url, data, callback) {
     // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
     return new Promise((resolve, reject) => {
         axios
             .post(url, data, {
-                headers: uploadHeader ? uploadGetHeaders() : getHeaders(),
+                headers: getHeaders(),
             })
             .then((res) => {
-                if (res.data.code === 200) {
+                if (+res.data.ret_code === 0) {
                     resolve(res.data);
-                } else if (res.data.code === 417) {
-                    message.error(res.data.body);
-                    callback();
                 } else {
-                    message.error("Network exception, please try again.");
+                    message.error("网络错误，请稍后重试");
+                    callback();
                 }
             })
             .catch((err) => {
@@ -45,11 +41,9 @@ export function axiosget(url, data, callback) {
             .then((res) => {
                 if (+res.data.code === 200) {
                     resolve(res.data);
-                } else if (+res.data.code === 417) {
-                    message.error(res.data.body);
-                    callback();
                 } else {
-                    message.error("Network exception, please try again.");
+                    message.error("网络错误，请稍后重试");
+                    callback();
                 }
             })
             .catch((err) => {

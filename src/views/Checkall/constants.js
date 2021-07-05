@@ -27,7 +27,34 @@ export const linechartOptions = {
     height: 240,
     tooltip: {
         trigger: "item",
-        formatter: "{b} : {c}",
+        borderWidth: 0,
+        borderRadius: 2,
+        formatter: function(name) {
+            const lineData = linechartOptions.series[0].data;
+            const nameSet = linechartOptions.xAxis.data;
+            const dataType = linechartOptions.type;
+            let total = 0;
+            let target = 0;
+            let toolpitArr = "";
+            let pointColor = "";
+
+            for (let i = 0; i < lineData.length; i++) {
+                total += Number(lineData[i]);
+                if (nameSet[i] === name.name) {
+                    target = Number(lineData[i]);
+                    pointColor = colorSet.mainSet[i];
+                }
+            }
+            const percent = Number(target / total) * 100;
+            toolpitArr = `<div style="text-align:left;font-size:12px"> <div style='font-size:16px;margin-bottom:8px'>${target.toFixed(
+                2
+            )}<span style="font-size:12px"> ${
+                dataType === "0" ? "万条" : "亿元"
+            }</span></div>  <div style="margin-bottom:8px"><span>${percent}%</span>占比</div><hr style='margin:-4px 0px 8px;background: rgba(0, 5, 18, 0.06);height:1px;border:none;'/><div style="display:flex;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:${pointColor};margin-right:5px"></div><div>全国近一年${
+                name.name
+            }</div></div> </div>`;
+            return toolpitArr;
+        },
     },
     xAxis: {
         type: "category",
@@ -36,6 +63,9 @@ export const linechartOptions = {
     },
     yAxis: {
         type: "value",
+        formatter: (name) => {
+            console.log(name);
+        },
     },
     series: [
         {
@@ -55,7 +85,32 @@ export const linechartOptions = {
 export const piechartOptions = {
     tooltip: {
         trigger: "item",
-        formatter: "{b} : {c} ({d}%)",
+        borderWidth: 0,
+        borderRadius: 2,
+        formatter: function(name) {
+            const pieData = piechartOptions.series[0].data;
+            const dataType = piechartOptions.type;
+            let toolpitColor = "";
+            let target = 0;
+            let total = 0;
+            for (let i = 0; i < pieData.length; i++) {
+                total += Number(pieData[i].value);
+                if (pieData[i].name === name.name) {
+                    toolpitColor = colorSet.mainSet[i];
+                    target =
+                        dataType === "0"
+                            ? Number(name.value) / 10000
+                            : Number(name.value) / 100000000;
+                }
+            }
+            total = dataType === "0" ? total / 10000 : total / 100000000;
+            const percent = ((target / total) * 100).toFixed(1);
+            return `<div style='padding:8px;text-align:left;margin-top:-4px'><span style='font-size:16px'>${target}</span><span style='font-size:12px'>${
+                dataType === "0" ? "万条" : "亿元"
+            }</span><span style='color:#585A69;font-size:12px;margin-left:28px'>${percent}%占比</span></div><hr style='margin:-4px 4px 8px;background: rgba(0, 5, 18, 0.06);height:1px;border:none;'/><div style="display:flex;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:${toolpitColor};margin:0 5px"></div><div style='text-align:center;margin:0px'>全国${
+                name.name
+            }缴纳单</div></div>`;
+        },
     },
     legend: {
         orient: "vertical",
@@ -71,18 +126,26 @@ export const piechartOptions = {
         },
         formatter: function(name) {
             const pieData = piechartOptions.series[0].data;
+            const dataType = piechartOptions.type;
             let total = 0;
             let target = 0;
             let legendArr = [];
             for (let i = 0; i < pieData.length; i++) {
-                total += pieData[i].value;
+                total += Number(pieData[i].value);
                 if (pieData[i].name === name) {
-                    target = pieData[i].value;
+                    target =
+                        dataType === "0"
+                            ? (Number(pieData[i].value) / 10000).toFixed(2)
+                            : (Number(pieData[i].value) / 100000000).toFixed(2);
                 }
             }
-            let percent = ((target / total) * 100).toFixed(1);
-            legendArr.push(`${name}    ${target}条  ${percent}%`);
-
+            total = dataType === "0" ? total / 10000 : total / 100000000;
+            const percent = ((target / total) * 100).toFixed(2);
+            legendArr.push(
+                `${name}    ${target}${
+                    dataType === "0" ? "万条" : "亿元"
+                }  ${percent}%`
+            );
             return legendArr;
         },
     },
@@ -93,7 +156,6 @@ export const piechartOptions = {
             center: ["130px", "50%"],
             radius: ["40%", "60%"],
             avoidLabelOverlap: false,
-            hoverAnimation: false,
             label: {
                 show: false,
             },
@@ -112,63 +174,181 @@ export const piechartOptions = {
     ],
 };
 
-export const checkallCoulmns = [
+export const checkallColumns = [
     {
         title: "排名",
         dataIndex: "rank",
         key: "rank",
+        scopedSlots: { customRender: "rank" },
     },
     {
         title: "类型",
         dataIndex: "type",
         key: "type",
         width: 150,
+        scopedSlots: { customRender: "type" },
+
         // ellipsis: true,
     },
     {
         title: "9-10分",
         dataIndex: "ninetoten",
         key: "ninetoten",
-        ellipsis: true,
+        scopedSlots: { customRender: "ninetoten" },
+        // ellipsis: true,
     },
     {
         title: "8-9分",
-        dataIndex: "eightto9",
-        key: "eightto9",
-        ellipsis: true,
+        dataIndex: "eighttonine",
+        key: "eighttonine",
+        scopedSlots: { customRender: "eighttonine" },
+        // ellipsis: true,
     },
     {
         title: "6-8分",
-        dataIndex: "sixto8",
-        key: "sixto8",
-        ellipsis: true,
+        dataIndex: "sixtoeight",
+        key: "sixtoeight",
+        scopedSlots: { customRender: "sixtoeight" },
+        // ellipsis: true,
     },
     {
         title: "0-6分",
         dataIndex: "zerotosix",
         key: "zerotosix",
-        ellipsis: true,
+        scopedSlots: { customRender: "zerotosix" },
+        // ellipsis: true,
     },
     {
         title: "总量",
-        dataIndex: "total",
-        key: "total",
+        dataIndex: "total_number",
+        key: "total_number",
+        scopedSlots: { customRender: "total_number" },
     },
     {
         title: "通过数",
-        dataIndex: "passtotal",
-        key: "passtotal",
+        dataIndex: "pass_number",
+        key: "pass_number",
+        scopedSlots: { customRender: "pass_number" },
     },
     {
         title: "未通过数",
-        dataIndex: "notpass",
-        key: "notpass",
-        scopedSlots: { customRender: "notpass" },
+        dataIndex: "notpass_number",
+        key: "notpass_number",
+        scopedSlots: { customRender: "notpass_number" },
     },
     {
         title: "未通过率",
-        dataIndex: "notpassper",
-        key: "notpassper",
-        scopedSlots: { customRender: "notpassper" },
+        dataIndex: "notpass_rate",
+        key: "notpass_rate",
+    },
+];
+
+export const checkdetailColumns = [
+    {
+        title: "排名",
+        dataIndex: "rank",
+        key: "rank",
+        scopedSlots: { customRender: "rank" },
+    },
+    {
+        title: "稽核类型",
+        dataIndex: "type",
+        key: "type",
+        // width: 100,
+        scopedSlots: { customRender: "type" },
+        // filters: [
+        //     {
+        //         text: "电费",
+        //         value: "电费",
+        //     },
+        //     {
+        //         text: "铁塔服务费",
+        //         value: "铁塔服务费",
+        //     },
+        //     {
+        //         text: "租费",
+        //         value: "租费",
+        //     },
+        // ],
+        // onFilter: (value, record) => record.type.indexOf(value) === 0,
+        // ellipsis: true,
+    },
+    {
+        title: "省份",
+        dataIndex: "prv_name",
+        key: "prv_name",
+        // width: 80,
+        // ellipsis: true,
+    },
+    {
+        title: "9-10分",
+        dataIndex: "ninetoten",
+        key: "ninetoten",
+        scopedSlots: { customRender: "ninetoten" },
+        // defaultSortOrder: "descend",
+        sorter: (a, b) => a.ninetoten - b.ninetoten,
+        // ellipsis: true,
+    },
+    {
+        title: "8-9分",
+        dataIndex: "eighttonine",
+        key: "eighttonine",
+        scopedSlots: { customRender: "eighttonine" },
+        sorter: (a, b) => a.eighttonine - b.eighttonine,
+        // ellipsis: true,
+    },
+    {
+        title: "6-8分",
+        dataIndex: "sixtoeight",
+        key: "sixtoeight",
+        scopedSlots: { customRender: "sixtoeight" },
+        sorter: (a, b) => a.sixtoeight - b.sixtoeight,
+        // ellipsis: true,
+    },
+    {
+        title: "0-6分",
+        dataIndex: "zerotosix",
+        key: "zerotosix",
+        scopedSlots: { customRender: "zerotosix" },
+        sorter: (a, b) => a.zerotosix - b.zerotosix,
+        // ellipsis: true,
+    },
+    {
+        title: "总量",
+        dataIndex: "total_number",
+        key: "total_number",
+        sorter: (a, b) =>
+            a.total_number
+                ? a.total_number - b.total_number
+                : a.total_amount - b.total_amount,
+        scopedSlots: { customRender: "total_number" },
+    },
+    {
+        title: "通过数",
+        dataIndex: "pass_number",
+        key: "pass_number",
+        sorter: (a, b) =>
+            a.pass_number
+                ? a.pass_number - b.pass_number
+                : a.pass_amount - b.pass_amount,
+        scopedSlots: { customRender: "pass_number" },
+    },
+    {
+        title: "未通过数",
+        dataIndex: "notpass_number",
+        key: "notpass_number",
+        sorter: (a, b) =>
+            a.notpass_number
+                ? a.notpass_number - b.notpass_number
+                : a.notpass_amount - b.notpass_amount,
+
+        scopedSlots: { customRender: "notpass_number" },
+    },
+    {
+        title: "未通过率",
+        dataIndex: "notpass_rate",
+        key: "notpass_rate",
+        // sorter: (a, b) => a.notpass_rate - b.notpass_rate,
+        scopedSlots: { customRender: "notpass_rate" },
     },
 ];

@@ -23,8 +23,8 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
-// import util from "../../utils/utils";
+import { mapState } from "vuex";
+import util from "../../utils/utils";
 import MENUITEM from "../../const/menu";
 
 export default {
@@ -74,6 +74,7 @@ export default {
     },
     getCurrentMenu() {
       window.addEventListener("hashchange", () => {
+        // console.log("hashchange");
         this.updateCurrentBreads();
       });
       //禁止掉浏览器的后退行为
@@ -112,11 +113,14 @@ export default {
       this.$router.push({
         path: `/${routePath}`,
       });
+      util.jumpTop();
     },
   },
 };
 </script>
-<style lang="less" scoped>
-// .layout-siderbar {
-// }
+
+<style>
+.ant-menu-item.ant-menu-item-selected > span {
+  color: white;
+}
 </style>

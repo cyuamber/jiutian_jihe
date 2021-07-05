@@ -4,15 +4,14 @@ module.exports = {
     "/lang/local": "/getCurrentLanguage",
     "/lang/local?language=:language": "/getCurrentLanguage",
     ///////<-------------Checkall--------->/////
-    // "/portal/getcheckfee": "/_getCheckallAmout",
-    "/portal/business/getcheckfee": "/_getCheckallAmout",
-    "/portal/business/getcheckalltable": "/_getCheckallTableAmount",
-
-    ///////<-------------VimEnv--------->/////
-
-    ///////<-------------Instrument MGS MGT--------->/////
-
-    ///////<-------------Instrument Package MGT--------->/////
+    "/POST/Payment/GetSum": "/getCheckallAmout",
+    "/POST/Payment/GetStatistics": "/getStatistics",
+    "/POST/Payment/GetPrvStatistics": "/getPrvStatistics",
+    "/POST/Payment/getEchartStatistics": "/getEchartStatistics",
+    "/POST/Payment/GetImageStatistics": "/getImageStatistics",
+    "/POST/Payment/GetImgPrvStatistics": "/getImgPrvStatistics",
+    "/POST/Payment/GetElecSum": "/getElecSum",
+    "/POST/Payment/GetElecPrvSum": "/getElecPrvSum",
 
     "/api/*": "/$1",
     "/*/*": "/$1_$2",
